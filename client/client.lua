@@ -4,9 +4,9 @@ local blip = nil
 ---------------------------------------
 -- When player joins, ask for the container
 ---------------------------------------
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    TriggerServerEvent('liquid_container:server:RequestOrSpawn')
-end)
+-- RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
+--     TriggerServerEvent('liquid_container:server:RequestOrSpawn')
+-- end)
 
 ---------------------------------------
 -- When the server sends us the container NetID
