@@ -8,10 +8,6 @@ function GetPlayerData()
     return QBCore.Functions.GetPlayerData()
 end
 
--- RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
---     TriggerServerEvent('liquid_container:server:RequestContainer')
--- end)
-
 function notify(text, type, duration)
     QBCore.Functions.Notify(text, type or "primary", duration or 5000)
 end

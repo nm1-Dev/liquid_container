@@ -11,3 +11,19 @@ Config.Container = {
         vector4(-2345.36, 3047.58, 32.82, 112.91)
     }
 }
+
+Config.Reward = {
+    items = {
+        enabled = true,
+        list = { "water_bottle", "sandwich", "cola", "coffee" },
+        min = 1,   -- minimum amount per item
+        max = 3,   -- maximum amount per item
+    },
+
+    money = {
+        enabled = true,       -- easy toggle for debugging or balance tweaks
+        type = "cash",        -- "cash" or "bank"
+        min = 50,
+        max = 200,
+    },
+}
