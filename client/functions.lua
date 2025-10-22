@@ -2,7 +2,7 @@
 -- Open Container Function
 ---------------------------------------
 function OpenContainer(entity)
-    TriggerCallback('liquid_container:server:CanOpen', function(can)
+    QBCore.Functions.TriggerCallback('liquid_container:server:CanOpen', function(can)
         if can then
             print('[Liquid] Opening container...')
             OpenAnimation(entity)

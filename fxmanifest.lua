@@ -2,17 +2,15 @@ fx_version 'cerulean'
 game 'gta5'
 
 author 'Nmsh'
-description 'Containers '
+description 'FiveM Script for Liquid Container'
 version '1.0.0'
 
 shared_script {
-  '@ox_lib/init.lua',
   'shared/config.lua'
 }
 
 client_scripts {
-  'client/custom/framework/*.lua',
-  'client/custom/*.lua',
+  'client/functions.lua',
   'client/client.lua'
 }
 
@@ -29,5 +27,3 @@ files {
   'web/script.js',
   'web/merryweather.png'
 }
-
-lua54 'yes'

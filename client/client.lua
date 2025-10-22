@@ -1,3 +1,4 @@
+QBCore = exports['qb-core']:GetCoreObject()
 local obj = nil
 local containerNetId = nil
 local blip = nil
@@ -28,11 +29,10 @@ RegisterNetEvent('liquid_container:client:Announce', function(zone, netId)
         },
         distance = 2.5,
     })
-    -- print_r(zone)
     TriggerEvent("chat:addMessage", {
-        color = { 0, 0, 0 },
+        color = { 255, 255, 255 },
         multiline = true,
-        args = { 'MERRY WEATHER', 'There is an container' }
+        args = { 'MERRY WEATHER', 'There is an container being raided in ' .. zone.name }
     })
     createBlip(zone)
     PlaySoundFrontend(-1, "5s_To_Event_Start_Countdown", "GTAO_FM_Events_Soundset", true)
@@ -67,7 +67,6 @@ RegisterNetEvent('liquid_container:client:RemoveContainer', function()
         RemoveBlip(blip)
         blip = nil
     end
-    -- print('[Liquid] Container removed from client.')
 end)
 
 
@@ -164,7 +163,11 @@ CreateThread(function()
             {
                 label = 'Boot up System',
                 action = function(entity, coords, args)
-                    openUI()
+                    QBCore.Functions.TriggerCallback('liquid_container:server:CanOpenLaptop', function(canOpen)
+                        if canOpen then
+                            openUI()
+                        end
+                    end)
                 end,
             },
         }
@@ -173,7 +176,9 @@ end)
 
 local rewards = {
     { icon = "fa-gun",   label = "Random Weapon" },
-    { icon = "fa-coins", label = "Cash & Ammo" },
+    { icon = "fa-box", label = "Ammo" },
+    { icon = "fa-coins", label = "Some Cash" },
+    { icon = "fa-box", label = "Random Items" },
 }
 
 function openUI()
@@ -193,7 +198,6 @@ end)
 
 RegisterNUICallback('startContainerWar', function(data, cb)
     local zone = Config.Container.Locations[tonumber(data.zoneId or 1)]
-    -- print_r(zone)
     if zone then
         TriggerServerEvent('liquid_container:server:startContainer', zone.id)
     end

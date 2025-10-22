@@ -1,32 +1,51 @@
-local QBCore = exports['qb-core']:GetCoreObject()
+QBCore = exports['qb-core']:GetCoreObject()
 local isSpawned = false
 local busy = false
 local rewardCooldown = {}
 local canStart = true
 
-QBCore.Commands.Add('laptop', '', {}, false, function(source, args)
+QBCore.Functions.CreateCallback('liquid_container:server:CanOpenLaptop', function(source, cb)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     local gangData = Player.PlayerData.gang
 
+    if not canStart then
+        QBCore.Functions.Notify(source, "You must wait before starting another container.")
+        cb(false)
+        return
+    end
+
     if Config.ContainerStart.anyPlayer then
-        print("[Liquid] Any player can start the container event.")
+        QBCore.Functions.Notify(source, "You can start the container event.")
+        cb(true)
         return
     end
 
     if Config.ContainerStart.gangBoss and not gangData.isboss then
-        print("[Liquid] Only gang bosses can start the event.")
+        QBCore.Functions.Notify(source, "Only gang bosses can start the event.")
+        cb(false)
         return
     end
 
     if Config.ContainerStart.specificGangBoss and Config.ContainerStart.specificGangBoss ~= false then
         if gangData.name ~= Config.ContainerStart.specificGangBoss or not gangData.isboss then
-            print(("[Liquid] Only the '%s' gang boss can start the event."):format(Config.ContainerStart.specificGangBoss))
+            QBCore.Functions.Notify(source, "Only the '" .. Config.ContainerStart.specificGangBoss .. "' gang boss can start the event.")
+            cb(false)
             return
         end
     end
-    TriggerClientEvent('liquid_container:client:OpenLapTop', src)
+    cb(true)
 end)
+
+QBCore.Commands.Add('laptop', '', {}, false, function(source, args)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if canStart then
+        TriggerClientEvent('liquid_container:client:OpenLapTop', src)
+    else
+        QBCore.Functions.Notify(src, "You must wait before starting another container.")
+    end
+end, 'admin')
 
 QBCore.Commands.Add('resetcontainer', '', {}, false, function(source, args)
     local src = source
@@ -44,6 +63,7 @@ RegisterNetEvent('liquid_container:server:broadcastObject', function(zone, netId
         print('[Liquid] No netId found')
     end
 end)
+
 
 RegisterNetEvent("liquid_container:server:startContainer", function(zone)
     local src = source

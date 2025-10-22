@@ -1,14 +1,12 @@
 Config = {}
 
 Config.Framework = "qb" -- "qb" or "esx"
-
+Config.TimeBetweenContainers = 10 -- The time between starting containers in minutes
 Config.ContainerStart = {
     anyPlayer = false,           -- set to false if you want any player to start the container event from the npc (lecter house)
-    gangBoss = false,            -- set to true if you want only gang bosses to start the container event
-    specificGangBoss = 'ballas', -- or set a gang name like 'godfather'
+    gangBoss = true,            -- set to true if you want only gang bosses to start the container event
+    specificGangBoss = false, -- or set a gang name like 'godfather'
 }
-
-Config.TimeBetweenContainers = 10 -- in minutes
 
 Config.Container = {
     Model = "tr_prop_tr_container_01a",
