@@ -1,6 +1,5 @@
 Config = {}
 
-Config.Framework = "qb" -- "qb" or "esx"
 Config.TimeBetweenContainers = 10 -- The time between starting containers in minutes
 Config.ContainerStart = {
     anyPlayer = false,           -- set to false if you want any player to start the container event from the npc (lecter house)
