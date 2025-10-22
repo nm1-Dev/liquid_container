@@ -5,35 +5,35 @@ local isSpawned = false
 local busy = false
 local rewardCooldown = {}
 
-QBCore.Commands.Add('laptop', '', {}, false, function(source, args)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src)
-    local gangData = Player.PlayerData.gang
+-- QBCore.Commands.Add('laptop', '', {}, false, function(source, args)
+--     local src = source
+--     local Player = QBCore.Functions.GetPlayer(src)
+--     local gangData = Player.PlayerData.gang
 
-    if Config.ContainerStart.anyPlayer then
-        print("[Liquid] Any player can start the container event.")
-        return
-    end
+--     if Config.ContainerStart.anyPlayer then
+--         print("[Liquid] Any player can start the container event.")
+--         return
+--     end
 
-    if Config.ContainerStart.gangBoss and not gangData.isboss then
-        print("[Liquid] Only gang bosses can start the event.")
-        return
-    end
+--     if Config.ContainerStart.gangBoss and not gangData.isboss then
+--         print("[Liquid] Only gang bosses can start the event.")
+--         return
+--     end
 
-    if Config.ContainerStart.specificGangBoss and Config.ContainerStart.specificGangBoss ~= false then
-        if gangData.name ~= Config.ContainerStart.specificGangBoss or not gangData.isboss then
-            print(("[Liquid] Only the '%s' gang boss can start the event."):format(Config.ContainerStart.specificGangBoss))
-            return
-        end
-    end
-    TriggerClientEvent('liquid_container:client:OpenLapTop', src)
-end)
+--     if Config.ContainerStart.specificGangBoss and Config.ContainerStart.specificGangBoss ~= false then
+--         if gangData.name ~= Config.ContainerStart.specificGangBoss or not gangData.isboss then
+--             print(("[Liquid] Only the '%s' gang boss can start the event."):format(Config.ContainerStart.specificGangBoss))
+--             return
+--         end
+--     end
+--     TriggerClientEvent('liquid_container:client:OpenLapTop', src)
+-- end)
 
 RegisterNetEvent('liquid_container:server:broadcastObject', function(zone, netId)
     if netId then
         TriggerClientEvent('liquid_container:client:Announce', -1, zone, netId)
     else
-        print('there is no id')
+        print('[Liquid] No netId found')
     end
 end)
 
@@ -41,27 +41,27 @@ end)
 RegisterNetEvent("liquid_container:server:startContainer", function(zone)
     local src = source
     local containerPlace = Config.Container.Locations[zone]
-    if not containerPlace then return print('Invalid Zone Number') end
+    if not containerPlace then return print('[Liquid] Invalid Zone Number') end
 
     if isSpawned then
-        TriggerClientEvent('QBCore:Notify', src, 'A container is already active.', 'error')
+        QBCore.Functions.Notify(src, 'There is a container are being raided currently')
         return
     end
 
     isSpawned = true
-    print(('[Liquid] Selected container zone: %s'):format(containerPlace.name))
-
-    -- Instead of spawning on server, just tell all clients to spawn it
+    TriggerEvent('qb-log:server:CreateLog', 'container', 'Container Started', 'green', 
+        string.format("%s (%s) started a container in zone %s", GetPlayerName(src), Player.PlayerData.citizenid, zone))
+    QBCore.Functions.Notify(src, 'Container has been started')
     TriggerClientEvent('liquid_container:client:SpawnContainer', src, containerPlace)
-    -- TriggerClientEvent('liquid_container:client:Announce', -1, zone)
 end)
 
-
-RegisterCommand('resetcontainer', function()
-    isSpawned = false
-    TriggerClientEvent('liquid_container:client:RemoveContainer', -1)
-    print('[Liquid] Container reset.')
-end, true)
+QBCore.Commands.Add('resetcontainer', '', {}, false, function(source, args)
+    if isSpawned then
+        isSpawned = false
+        TriggerClientEvent('liquid_container:client:RemoveContainer', -1)
+        QBCore.Functions.Notify(source, 'Container has been reset')
+    end
+end, 'admin')
 
 RegisterNetEvent("liquid_container:server:ContainerOpened", function()
     local src = source
@@ -74,7 +74,6 @@ RegisterNetEvent("liquid_container:server:ContainerOpened", function()
         return
     end
     rewardCooldown[src] = os.time() + 10
-
     -- ✅ Item rewards
     if Config.Reward.items.enabled then
         for _, reward in pairs(Config.Reward.items.list) do
@@ -101,12 +100,9 @@ RegisterNetEvent("liquid_container:server:ContainerOpened", function()
     -- ✅ Optional: server log for audit
     TriggerEvent('qb-log:server:CreateLog', 'container', 'Container Looted', 'green', 
         string.format("%s (%s) looted a container and received rewards.", GetPlayerName(src), Player.PlayerData.citizenid))
+    isSpawned = false
     TriggerClientEvent('liquid_container:client:RemoveContainer', -1)
-end)
-
--- Cleanup cooldown when player leaves
-AddEventHandler('playerDropped', function()
-    rewardCooldown[source] = nil
+    print('[Liquid] Container reset.')
 end)
 
 
@@ -180,4 +176,9 @@ AddEventHandler('onResourceStop', function(resource)
         end
         print('[Liquid] Container deleted on resource stop.')
     end
+end)
+
+-- Cleanup cooldown when player leaves
+AddEventHandler('playerDropped', function()
+    rewardCooldown[source] = nil
 end)

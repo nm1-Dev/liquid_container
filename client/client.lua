@@ -1,5 +1,4 @@
 local obj = nil
-local containerSpawned = false
 local containerNetId = nil
 local blip = nil
 local netObject = nil
@@ -61,10 +60,9 @@ function createBlip(container)
 end
 
 RegisterNetEvent('liquid_container:client:RemoveContainer', function()
-    local entity = NetworkGetEntityFromNetworkId(containerNetId)
-    if containerNetId and DoesEntityExist(containerNetId) then
-        DeleteEntity(containerNetId)
-        containerNetId = nil
+    if  DoesEntityExist(obj) then
+        DeleteEntity(obj)
+        obj = nil
     end
     if DoesBlipExist(blip) then
         RemoveBlip(blip)
@@ -213,6 +211,7 @@ AddEventHandler('onResourceStop', function(resource)
     if obj and DoesEntityExist(obj) then
         DeleteEntity(obj)
     end
+    removeGuards()
     if DoesBlipExist(blip) then
         RemoveBlip(blip)
     end
