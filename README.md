@@ -1,5 +1,3 @@
----
-````markdown
 <!-- Banner -->
 <p align="center">
   <img src="https://cdn.discordapp.com/attachments/1426848169567719455/1430210420523425822/liquid_container_banner.png" alt="Liquid Container Wars Banner" width="720"/>
@@ -18,8 +16,6 @@
   Dynamic PVP event system where players and gangs fight for control of <b>Merryweather</b> supply containers.<br>
   Featuring AI guards, randomized rewards, and a dark-tech themed <b>laptop interface</b> to start wars.
 </p>
-
----
 
 ## ✨ Features
 
