@@ -8,6 +8,8 @@ Config.ContainerStart = {
     specificGangBoss = 'ballas', -- or set a gang name like 'godfather'
 }
 
+Config.TimeBetweenContainers = 10 -- in minutes
+
 Config.Container = {
     Model = "tr_prop_tr_container_01a",
     Locations = {

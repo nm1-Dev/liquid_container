@@ -50,7 +50,6 @@ function createContainer(container)
     containerNetId = NetworkGetNetworkIdFromEntity(obj)
     SetNetworkIdCanMigrate(containerNetId, true)
     TriggerServerEvent('liquid_container:server:broadcastObject', container, containerNetId)
-    print()
 end
 
 function createBlip(container)

@@ -17,8 +17,7 @@ client_scripts {
 }
 
 server_scripts {
-  'server/custom/framework/*.lua',
-  'server/custom/*.lua',
+  'server/functions.lua',
   'server/server.lua'
 }
 
