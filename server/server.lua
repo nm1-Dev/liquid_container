@@ -47,10 +47,12 @@ end)
 
 RegisterNetEvent("liquid_container:server:startContainer", function(zone)
     local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
     local containerPlace = Config.Container.Locations[zone]
     if not containerPlace then return print('[Liquid] Invalid Zone Number') end
 
-      if not canStart then
+    if not canStart then
         QBCore.Functions.Notify(src, 'You must wait before starting another container.', 'error')
         return
     end
