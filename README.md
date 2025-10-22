@@ -1,7 +1,5 @@
 <!-- Banner -->
-<p align="center">
-  <img src="https://cdn.discordapp.com/attachments/1426848169567719455/1430210420523425822/liquid_container_banner.png" alt="Liquid Container Wars Banner" width="720"/>
-</p>
+[https://youtu.be/naz74_vZ0SA](https://youtu.be/naz74_vZ0SA)
 
 <h1 align="center">📦 Liquid Container Wars | FiveM Script</h1>
 
