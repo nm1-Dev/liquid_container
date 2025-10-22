@@ -8,6 +8,11 @@ function GetPlayer(src)
     return ESX.GetPlayerFromId(src)
 end
 
+function GetPlayerGang(src)
+    local Player = GetPlayer(src)
+    return Player.getGang()
+end
+
 function AddItem(src, item, amount, info, slot)
     local Player = GetPlayer(src)
     Player.addInventoryItem(item, amount, info, slot)
@@ -19,4 +24,8 @@ end
 
 function CreateCallback(name, cb)
     ESX.RegisterServerCallback(name, cb)
+end
+
+function AddComand(name, cb)
+    ESX.RegisterCommand(name, 'user', cb, false)
 end

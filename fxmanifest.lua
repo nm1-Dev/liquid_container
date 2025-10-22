@@ -22,4 +22,13 @@ server_scripts {
   'server/server.lua'
 }
 
+ui_page 'web/index.html'
+
+files {
+  'web/index.html',
+  'web/style.css',
+  'web/script.js',
+  'web/merryweather.png'
+}
+
 lua54 'yes'
