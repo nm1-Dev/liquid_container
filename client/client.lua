@@ -11,7 +11,7 @@ local spawnedGuards = {}
 ---------------------------------------
 RegisterNetEvent('liquid_container:client:SpawnContainer', function(container, zone)
     createContainer(container)
-    createBlip(container)
+    spawnNPC(container)
 end)
 
 RegisterNetEvent('liquid_container:client:Announce', function(zone, netId)
@@ -29,12 +29,13 @@ RegisterNetEvent('liquid_container:client:Announce', function(zone, netId)
         },
         distance = 2.5,
     })
-    spawnNPC(zone)
+    -- print_r(zone)
     TriggerEvent("chat:addMessage", {
         color = { 0, 0, 0 },
         multiline = true,
         args = { 'MERRY WEATHER', 'There is an container' }
     })
+    createBlip(zone)
     PlaySoundFrontend(-1, "5s_To_Event_Start_Countdown", "GTAO_FM_Events_Soundset", true)
     Wait(1000)
 end)
@@ -79,26 +80,26 @@ CreateThread(function()
     SetRelationshipBetweenGroups(5, GetHashKey("PLAYER"), GetHashKey(GUARD_GROUP))
 end)
 
-function spawnNPC(placeId)
-    if not Config.Container.Locations[placeId] or not Config.Container.Locations[placeId].npc then
-        print("[Liquid] Invalid or missing NPC config for location:", placeId)
+function spawnNPC(container)
+    if not container or not container.npc then
+        print("[Liquid] Invalid or missing NPC config for location:", container.coords)
         return
     end
 
-    for id, guard in pairs(Config.Container.Locations[placeId].npc) do
-        RequestModel(guard.ped)
-        while not HasModelLoaded(guard.ped) do Wait(0) end
+    for id, guard in pairs(container.npc) do
+        RequestModel(guard.model)
+        while not HasModelLoaded(guard.model) do Wait(0) end
 
         local ped = CreatePed(
             26,
-            GetHashKey(guard.ped),
+            GetHashKey(guard.model),
             guard.pos.x, guard.pos.y, guard.pos.z,
             guard.pos.w or 0.0,
             true, true
         )
 
         if not DoesEntityExist(ped) then
-            print(("[Liquid] Failed to create guard %s at #%s"):format(guard.ped, id))
+            print(("[Liquid] Failed to create guard %s at #%s"):format(guard.model, id))
             goto continue
         end
 
@@ -133,23 +134,6 @@ function spawnNPC(placeId)
                 TaskCombatPed(ped, targetPed, 0, 16)
             end
         end
-
-        -- keep re-engaging nearby players automatically
-        -- CreateThread(function()
-        --     while DoesEntityExist(ped) and not IsPedDeadOrDying(ped) do
-        --         Wait(2000)
-        --         local players = GetActivePlayers()
-        --         for _, ply in pairs(players) do
-        --             local targetPed = GetPlayerPed(ply)
-        --             if DoesEntityExist(targetPed) and targetPed ~= ped then
-        --                 local dist = #(GetEntityCoords(ped) - GetEntityCoords(targetPed))
-        --                 if dist < 90.0 then
-        --                     TaskCombatPed(ped, targetPed, 0, 16)
-        --                 end
-        --             end
-        --         end
-        --     end
-        -- end)
 
         table.insert(spawnedGuards, ped)
         ::continue::
